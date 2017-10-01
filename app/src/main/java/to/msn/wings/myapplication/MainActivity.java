@@ -67,17 +67,12 @@ public class MainActivity extends AppCompatActivity {
         button1.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                Log.d("ANDROID_TEST",String.valueOf(cursor.moveToNext())); //質問①←この行がないと、②のif分岐でelseに入った瞬間にエラーが起きてしまう。③でも同じことが起きている。
                 if (mTimer == null) {
-                    if (cursor.moveToNext() == true){       //②
-                        Log.d("ANDROID_TEST","1つ進もうとしている");
+                    if (cursor.isLast() == false){
                         cursor.moveToNext();
                         showImage();
-                        Log.d("ANDROID_TEST","1つ進めた");
                     } else {
-                        Log.d("ANDROID_TEST", "最初に戻ろうとしている");
                         cursor.moveToFirst();
-                        Log.d("ANDROID_TEST", "最初に戻れた");
                         showImage();
                     }
                 } else{
@@ -96,15 +91,10 @@ public class MainActivity extends AppCompatActivity {
                     mTimer.schedule(new TimerTask() {
                         @Override
                         public void run() {
-                            Log.d("ANDROID_TEST",String.valueOf(cursor.moveToNext()));  //③
-                            if (cursor.moveToNext() == true){
-                                Log.d("ANDROID_TEST","再生で進もうとする");
+                            if (cursor.isLast() == false){
                                 cursor.moveToNext();
-                                Log.d("ANDROID_TEST","再生で進めた");
                             } else {
-                                Log.d("ANDROID_TEST","最初に戻ろうとする");
                                 cursor.moveToFirst();
-                                Log.d("ANDROID_TEST","最初に戻れた");
                             }
                             mHandler.post(new Runnable() {
                             @Override
@@ -113,32 +103,25 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             });
                         }
-                    }, 2000, 2000);
+                    }, 500, 500);
                 } else {
                     mTimer.cancel();
                     mTimer = null;
                     button2.setText("再生");
-                    Log.d("ANDROID_TEST","再生を止めました。");
                 }
             }
         });
 
 
-        //質問④:進むボタンを押すときと、戻るボタンを押すときで、表示される画像が異なるのですが、なぜでしょうか。Galaryには全部で8枚写真がありますが、進む/戻るでそれぞれ3種類ずつでループが走っているようです...
         button3.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                Log.d("ANDROID_TEST",String.valueOf(cursor.moveToPrevious()));
                 if (mTimer == null) {
-                    if (cursor.moveToPrevious() == true){
-                        Log.d("ANDROID_TEST","1つ戻ろうとしている");
+                    if (cursor.isFirst() == false){
                         cursor.moveToPrevious();
                         showImage();
-                        Log.d("ANDROID_TEST","1つ戻れた");
                     } else {
-                        Log.d("ANDROID_TEST", "最後に戻ろうとしている");
                         cursor.moveToLast();
-                        Log.d("ANDROID_TEST", "最後に戻れた");
                         showImage();
                     }
                 } else{
@@ -188,4 +171,3 @@ public class MainActivity extends AppCompatActivity {
         imageVIew.setImageURI(imageUri);
     }
 }
-
